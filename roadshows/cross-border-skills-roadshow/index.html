@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>跨境电商三大 Skill 路演 PPT</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07130f;
+      --ink: #fff7e8;
+      --muted: rgba(255, 247, 232, 0.72);
+      --soft: rgba(255, 247, 232, 0.12);
+      --line: rgba(255, 247, 232, 0.18);
+      --leaf: #7ecf92;
+      --gold: #f2c86b;
+      --coral: #ef8d6b;
+      --blue: #7ab8ff;
+      --panel: rgba(9, 31, 24, 0.68);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background:
+        linear-gradient(120deg, rgba(7, 19, 15, 0.94), rgba(13, 42, 32, 0.88)),
+        radial-gradient(circle at 72% 18%, rgba(242, 200, 107, 0.16), transparent 30%),
+        radial-gradient(circle at 18% 76%, rgba(126, 207, 146, 0.15), transparent 32%);
+      color: var(--ink);
+    }
+
+    .progress {
+      position: fixed;
+      z-index: 50;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 247, 232, 0.1);
+    }
+
+    .progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--leaf), var(--gold), var(--coral));
+      transition: width 160ms ease;
+    }
+
+    .rail {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      z-index: 40;
+      display: grid;
+      gap: 10px;
+      transform: translateY(-50%);
+    }
+
+    .rail button {
+      width: 10px;
+      height: 10px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255, 247, 232, 0.32);
+      cursor: pointer;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .rail button[aria-current="true"] {
+      transform: scale(1.7);
+      background: var(--gold);
+    }
+
+    .hint {
+      position: fixed;
+      left: 32px;
+      bottom: 22px;
+      z-index: 35;
+      color: rgba(255, 247, 232, 0.56);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .slide {
+      position: relative;
+      width: 100vw;
+      min-height: 100vh;
+      scroll-snap-align: start;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      padding: 56px;
+      isolation: isolate;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 24px;
+      border: 1px solid rgba(255, 247, 232, 0.14);
+      pointer-events: none;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(90deg, rgba(255, 247, 232, 0.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 247, 232, 0.026) 1px, transparent 1px);
+      background-size: 96px 96px;
+      mask-image: radial-gradient(circle at 50% 50%, black, transparent 76%);
+    }
+
+    .stage {
+      width: min(1180px, 100%);
+      min-height: 640px;
+      display: grid;
+      align-content: center;
+      gap: 34px;
+    }
+
+    .kicker {
+      width: fit-content;
+      padding: 9px 16px;
+      border: 1px solid rgba(242, 200, 107, 0.38);
+      border-radius: 999px;
+      background: rgba(242, 200, 107, 0.12);
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 1040px;
+      font-size: clamp(46px, 7vw, 86px);
+      line-height: 0.98;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    h2 {
+      max-width: 980px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.06;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .lead {
+      max-width: 880px;
+      color: var(--muted);
+      font-size: clamp(19px, 2.1vw, 27px);
+      line-height: 1.45;
+      font-weight: 520;
+    }
+
+    .meta-row,
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .tag {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 247, 232, 0.08);
+      color: rgba(255, 247, 232, 0.88);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 44px;
+      align-items: center;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      min-height: 128px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 11px;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .card span,
+    .card p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .number {
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .flow-card {
+      position: relative;
+      min-height: 360px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(9, 31, 24, 0.72);
+    }
+
+    .flow-card::after {
+      content: "";
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      width: 18px;
+      height: 1px;
+      background: rgba(242, 200, 107, 0.56);
+    }
+
+    .flow-card:last-child::after {
+      display: none;
+    }
+
+    .flow-card h3 {
+      margin: 18px 0 18px;
+      font-size: 25px;
+      line-height: 1.12;
+    }
+
+    .flow-card ul,
+    .list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 11px;
+    }
+
+    .flow-card li,
+    .list li {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.36;
+    }
+
+    .flow-card li::before,
+    .list li::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 10px;
+      border-radius: 999px;
+      background: var(--leaf);
+      transform: translateY(-1px);
+    }
+
+    .metric-wall {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .metric {
+      min-height: 132px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 247, 232, 0.075);
+    }
+
+    .metric b {
+      display: block;
+      color: var(--gold);
+      font-size: 36px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .table {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(9, 31, 24, 0.68);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr 1.25fr;
+      border-bottom: 1px solid rgba(255, 247, 232, 0.12);
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .cell {
+      padding: 18px 20px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.38;
+    }
+
+    .cell:first-child {
+      color: var(--ink);
+      font-weight: 850;
+    }
+
+    .row.head .cell {
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(242, 200, 107, 0.09);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 0;
+      border-left: 2px solid rgba(242, 200, 107, 0.42);
+      margin-left: 10px;
+      padding-left: 30px;
+    }
+
+    .step {
+      position: relative;
+      padding: 0 0 30px;
+    }
+
+    .step::before {
+      content: "";
+      position: absolute;
+      left: -40px;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: var(--gold);
+      box-shadow: 0 0 0 7px rgba(242, 200, 107, 0.12);
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 22px;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .quote {
+      max-width: 860px;
+      padding-left: 28px;
+      border-left: 4px solid var(--gold);
+      color: var(--ink);
+      font-size: clamp(26px, 3.8vw, 46px);
+      line-height: 1.16;
+      font-weight: 880;
+    }
+
+    .accent-leaf {
+      color: var(--leaf);
+    }
+
+    .accent-gold {
+      color: var(--gold);
+    }
+
+    .accent-coral {
+      color: var(--coral);
+    }
+
+    @media (max-width: 900px) {
+      .slide {
+        padding: 44px 24px;
+      }
+
+      .slide::before {
+        inset: 12px;
+      }
+
+      .stage {
+        min-height: 720px;
+      }
+
+      .split,
+      .flow,
+      .grid.two,
+      .grid.three,
+      .metric-wall {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-card {
+        min-height: auto;
+      }
+
+      .flow-card::after {
+        display: none;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .rail {
+        right: 12px;
+      }
+
+      .hint {
+        left: 18px;
+        bottom: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+  <nav class="rail" id="rail" aria-label="幻灯片导航"></nav>
+  <div class="hint">Scroll / Arrow keys</div>
+
+  <main>
+    <section class="slide" id="slide-1">
+      <div class="stage">
+        <div class="kicker">Cross-border AI Skill System</div>
+        <h1>把跨境电商调研，固化成一套可复用的 AI 作战流程</h1>
+        <p class="lead">三个 Skill 串起“找数据、判机会、做转化”全链路，让产品调研不再靠临时发挥，而是一次输入，稳定产出老板能看、运营能用、销售能跟进的资料包。</p>
+        <div class="meta-row">
+          <span class="tag">竞品抓取</span>
+          <span class="tag">市场机会</span>
+          <span class="tag">评论洞察</span>
+          <span class="tag">内容脚本</span>
+          <span class="tag">询盘话术</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-2">
+      <div class="stage split">
+        <div>
+          <div class="kicker">Problem</div>
+          <h2>过去的问题：每次做产品分析，都像从零开始搭棚子</h2>
+          <p class="lead">关键词、平台、竞品、价格、评论、脚本、汇报材料分散在不同任务里，输出质量依赖临场描述，难以复用。</p>
+        </div>
+        <div class="grid">
+          <div class="card"><strong>信息碎片化</strong><span>竞品链接、视频、评论、市场趋势、供应商信息没有固定承接结构。</span></div>
+          <div class="card"><strong>判断不稳定</strong><span>爆款、机会、风险、优先级如果没有规则，很容易靠感觉下结论。</span></div>
+          <div class="card"><strong>转化链路断开</strong><span>调研报告看完后，还要重新写详情页、脚本、达人 Brief、询盘话术。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-3">
+      <div class="stage">
+        <div class="kicker">System Architecture</div>
+        <h2>解决方案：三段式 Skill，把跨境工作流变成标准管线</h2>
+        <div class="flow">
+          <div class="flow-card">
+            <div class="number">Skill 01</div>
+            <h3>竞品与爆款内容抓取分析</h3>
+            <ul>
+              <li>抓 Amazon、TikTok、Alibaba、Google 等公开信息</li>
+              <li>整理竞品、视频、达人、供应商链接</li>
+              <li>判断一级爆款、二级爆款、潜力内容</li>
+              <li>输出数据表、分析报告、PPT 大纲</li>
+            </ul>
+          </div>
+          <div class="flow-card">
+            <div class="number">Skill 02</div>
+            <h3>市场分析与机会判断</h3>
+            <ul>
+              <li>判断产品是否适合跨境销售</li>
+              <li>对比国家、平台、价格带和进入难度</li>
+              <li>输出机会等级、风险、90 天计划</li>
+              <li>形成老板汇报用市场报告</li>
+            </ul>
+          </div>
+          <div class="flow-card">
+            <div class="number">Skill 03</div>
+            <h3>评论洞察与内容脚本生成</h3>
+            <ul>
+              <li>分析评论、差评、痛点和真实需求</li>
+              <li>提炼卖点、优化详情页和主图方向</li>
+              <li>生成短视频脚本、达人 Brief、询盘话术</li>
+              <li>把调研变成能直接执行的素材</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-4">
+      <div class="stage split">
+        <div>
+          <div class="kicker">Skill 01</div>
+          <h2>第一段：先回答“谁在卖，谁卖得好，哪些内容爆了”</h2>
+          <p class="lead">它负责把市场里的外部信号抓回来，形成可筛选、可排序、可复盘的数据底座。</p>
+        </div>
+        <div class="table">
+          <div class="row head"><div class="cell">平台</div><div class="cell">抓取重点</div><div class="cell">判断结果</div></div>
+          <div class="row"><div class="cell">TikTok</div><div class="cell">视频、达人、互动、挂车、内容形式</div><div class="cell">一级爆款、二级爆款、潜力内容</div></div>
+          <div class="row"><div class="cell">Amazon</div><div class="cell">标题、价格、评论、评分、BSR、A+ 页面</div><div class="cell">一级竞品、二级竞品、潜力竞品</div></div>
+          <div class="row"><div class="cell">Alibaba.com</div><div class="cell">MOQ、价格、包装、箱规、OEM/ODM、认证</div><div class="cell">重点供应商、参考供应商、低价值供应商</div></div>
+          <div class="row"><div class="cell">Google / YouTube / Instagram</div><div class="cell">内容标题、互动、主题、产品出现方式</div><div class="cell">内容参考价值与可模仿方向</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-5">
+      <div class="stage split">
+        <div>
+          <div class="kicker">Skill 02</div>
+          <h2>第二段：再回答“这个市场值不值得做，先从哪里打进去”</h2>
+          <p class="lead">它把产品从“看起来不错”推进到“是否值得投入资源”，并给出国家、平台、价格、包装、风险和阶段计划。</p>
+        </div>
+        <div class="grid two">
+          <div class="card"><strong>国家机会评分</strong><span>市场需求、平台成熟度、消费能力、物流、合规、竞争、内容传播、B端采购合计 100 分。</span></div>
+          <div class="card"><strong>平台进入建议</strong><span>Amazon 做复购和评价，TikTok 做内容转化，Alibaba 做 B端询盘，独立站做信任和承接。</span></div>
+          <div class="card"><strong>价格与规格</strong><span>C端按每 100g、组合装、家庭装分析；B端按 MOQ、FOB、箱规、交期分析。</span></div>
+          <div class="card"><strong>风险与节奏</strong><span>输出机会等级、合规风险、价格战风险、90 天执行计划和 6 个月增长路径。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-6">
+      <div class="stage split">
+        <div>
+          <div class="kicker">Skill 03</div>
+          <h2>第三段：最后回答“怎么改产品、怎么写页面、怎么拍视频、怎么回复客户”</h2>
+          <p class="lead">它把评论和竞品页面里的真实语言转成运营动作，把调研结果落到转化素材上。</p>
+        </div>
+        <div class="grid">
+          <div class="card"><strong>评论洞察</strong><span>正负面占比、购买原因、差评归因、高频需求、可复用用户表达。</span></div>
+          <div class="card"><strong>产品优化</strong><span>规格、包装、材质、口味、价格、主图、详情页、平台上架建议。</span></div>
+          <div class="card"><strong>内容生成</strong><span>Amazon 五点、Alibaba 详情页、TikTok 文案、短视频脚本、达人 Brief、B端询盘话术。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-7">
+      <div class="stage">
+        <div class="kicker">One Command</div>
+        <h2>最终使用方式：一句话调用，固定产出资料包</h2>
+        <div class="card">
+          <p class="quote">请按顺序执行三个跨境电商 Skill：产品 apple chips，目标市场美国，平台 Amazon、TikTok Shop、Alibaba.com、Google，业务模式 C端零售 + B端批发，输出完整资料包。</p>
+        </div>
+        <div class="tag-row">
+          <span class="tag">自动扩展关键词</span>
+          <span class="tag">自动抓取/整理公开数据</span>
+          <span class="tag">自动判断机会等级</span>
+          <span class="tag">自动生成内容素材</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-8">
+      <div class="stage">
+        <div class="kicker">Deliverables</div>
+        <h2>固定输出：从数据表到老板汇报，再到运营执行</h2>
+        <div class="metric-wall">
+          <div class="metric"><b>01</b><span>竞品与爆款数据 Excel</span></div>
+          <div class="metric"><b>02</b><span>市场机会分析报告</span></div>
+          <div class="metric"><b>03</b><span>评论洞察与产品优化报告</span></div>
+          <div class="metric"><b>04</b><span>老板汇报 PPT 大纲</span></div>
+          <div class="metric"><b>05</b><span>Amazon 标题、五点、A+ 结构</span></div>
+          <div class="metric"><b>06</b><span>Alibaba 详情页与 RFQ 模板</span></div>
+          <div class="metric"><b>07</b><span>TikTok 短视频脚本与挂车文案</span></div>
+          <div class="metric"><b>08</b><span>达人 Brief 与 B端询盘话术</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-9">
+      <div class="stage split">
+        <div>
+          <div class="kicker">Decision Layer</div>
+          <h2>它不只是整理资料，而是把判断规则写进流程</h2>
+          <p class="lead">爆款、市场、风险、优先级都有明确评分或分级标准，减少“凭感觉做决定”。</p>
+        </div>
+        <div class="timeline">
+          <div class="step"><strong>爆款判断</strong><span>TikTok 看点赞、评论、分享、购买意图；Amazon 看评分、评论数、BSR 和复购属性；Alibaba 看 MOQ、价格、认证、详情页专业度。</span></div>
+          <div class="step"><strong>机会判断</strong><span>国家市场按 100 分评分，平台按业务模式和进入难度判断，最终给出 S / A / B / C 机会等级。</span></div>
+          <div class="step"><strong>转化判断</strong><span>评论语言必须能追溯到真实需求，卖点必须来自评论、竞品页面或产品事实。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-10">
+      <div class="stage">
+        <div class="kicker">Operating Rhythm</div>
+        <h2>建议的团队使用节奏：每个新品都跑一遍，形成内部资产库</h2>
+        <div class="grid three">
+          <div class="card"><div class="number">Day 1</div><strong>选品初筛</strong><span>执行 Skill 01 + Skill 02，确认竞品、热度、国家、平台和机会等级。</span></div>
+          <div class="card"><div class="number">Day 2-3</div><strong>素材转化</strong><span>执行 Skill 03，生成详情页、短视频、达人 Brief、询盘话术。</span></div>
+          <div class="card"><div class="number">Day 4-7</div><strong>小步测试</strong><span>上架测试版、找达人、发询盘、跑内容，记录真实反馈。</span></div>
+          <div class="card"><div class="number">Month 1</div><strong>复盘迭代</strong><span>用评论和询盘反向修正包装、价格、主图、话术。</span></div>
+          <div class="card"><div class="number">Month 2-3</div><strong>扩大投放</strong><span>保留高转化脚本，复制达人类型，沉淀平台关键词。</span></div>
+          <div class="card"><div class="number">Month 4-6</div><strong>资产沉淀</strong><span>把报告、脚本、报价、FAQ、页面素材变成产品知识库。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-11">
+      <div class="stage split">
+        <div>
+          <div class="kicker">Management Value</div>
+          <h2>对老板来说，价值是把“能不能做”讲清楚</h2>
+          <p class="lead">每个产品最后都能得到一套统一口径：市场是否值得进入，先做哪个平台，价格和包装怎么定，风险在哪里，下一步资源怎么投。</p>
+        </div>
+        <div class="grid">
+          <div class="card"><strong>决策更快</strong><span>从临时调研变成固定流程，减少反复解释和等待。</span></div>
+          <div class="card"><strong>汇报更稳</strong><span>每次都输出同样结构的市场报告、评分表和 PPT 大纲。</span></div>
+          <div class="card"><strong>执行更直接</strong><span>运营、设计、内容、销售都能拿到自己的下一步动作。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-12">
+      <div class="stage">
+        <div class="kicker">Closing</div>
+        <h2>这套 Skill 的本质：把跨境电商经验，变成可复制的工作系统</h2>
+        <p class="lead">未来每一个新品，都可以按同样方式跑：先找证据，再判断机会，最后生成执行素材。不是一次性报告，而是一条持续增长的产品分析流水线。</p>
+        <div class="tag-row">
+          <span class="tag accent-leaf">找数据</span>
+          <span class="tag accent-gold">判机会</span>
+          <span class="tag accent-coral">做转化</span>
+          <span class="tag">沉淀资产</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const rail = document.getElementById("rail");
+    const progressBar = document.getElementById("progressBar");
+
+    slides.forEach((slide, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.setAttribute("aria-label", `跳转到第 ${index + 1} 页`);
+      button.addEventListener("click", () => slide.scrollIntoView({ behavior: "smooth", block: "start" }));
+      rail.appendChild(button);
+    });
+
+    const buttons = Array.from(rail.querySelectorAll("button"));
+
+    function activeIndex() {
+      const midpoint = window.scrollY + window.innerHeight / 2;
+      let current = 0;
+      slides.forEach((slide, index) => {
+        if (slide.offsetTop <= midpoint) current = index;
+      });
+      return current;
+    }
+
+    function updateProgress() {
+      const index = activeIndex();
+      buttons.forEach((button, i) => button.setAttribute("aria-current", i === index ? "true" : "false"));
+      progressBar.style.width = `${((index + 1) / slides.length) * 100}%`;
+    }
+
+    function go(delta) {
+      const next = Math.max(0, Math.min(slides.length - 1, activeIndex() + delta));
+      slides[next].scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    window.addEventListener("keydown", (event) => {
+      if (["ArrowDown", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        go(1);
+      }
+      if (["ArrowUp", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        go(-1);
+      }
+      if (event.key === "Home") {
+        event.preventDefault();
+        slides[0].scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      if (event.key === "End") {
+        event.preventDefault();
+        slides[slides.length - 1].scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+
+    updateProgress();
+  </script>
+</body>
+</html>
