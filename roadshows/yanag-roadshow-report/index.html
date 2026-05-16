@@ -128,6 +128,40 @@
       pointer-events: none;
     }
 
+    .link-strip {
+      position: absolute;
+      left: clamp(42px, 6vw, 88px);
+      right: clamp(42px, 6vw, 88px);
+      top: clamp(104px, 13vh, 132px);
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 12px;
+      pointer-events: auto;
+    }
+
+    .link-strip a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 10px 16px;
+      border: 1px solid rgba(233, 196, 106, 0.42);
+      border-radius: 999px;
+      background: rgba(6, 20, 15, 0.72);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 18px 52px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(10px);
+    }
+
+    .link-strip a:hover {
+      border-color: rgba(233, 196, 106, 0.82);
+      background: rgba(233, 196, 106, 0.16);
+    }
+
     @media (max-width: 760px) {
       .slide {
         min-height: 720px;
@@ -145,6 +179,18 @@
         left: 18px;
         bottom: 14px;
       }
+
+      .link-strip {
+        left: 26px;
+        right: 26px;
+        top: 92px;
+      }
+
+      .link-strip a {
+        min-height: 38px;
+        padding: 8px 12px;
+        font-size: 12px;
+      }
     }
   </style>
 </head>
@@ -160,23 +206,38 @@
       {
         type: "cover",
         kicker: "YANAG.COM ROADSHOW REPORT",
-        title: "从零搭建一个出海企业网站",
-        subtitle: "15 天内，把公司展示、产品内容、证书背书、AI 可发现性和自动部署流程串成一套可持续迭代的数字资产。",
-        meta: ["2026.04.28 - 05.12", "Claude Code + Codex + 用户指导", "GitHub → Vercel 自动部署"]
+        title: "从展示网站到跨境获客闭环",
+        subtitle: "YANAG.com 不只是企业介绍页，而是把前端社媒触达、中端官网筛选、后端平台承接串起来的 B 端增长中枢。",
+        meta: ["https://yanag.com", "B2B Lead Hub", "GitHub → Vercel 自动部署"],
+        links: [
+          ["访问 YANAG.com", "https://yanag.com"],
+          ["苹果脆片产品页", "https://yanag.com/products/apple-crisps"]
+        ]
       },
       {
         type: "thesis",
         kicker: "WHY IT MATTERS",
-        title: "目标不是做一个网页，而是建立一个可信的出海入口",
-        claim: "企业官网承担三件事：让客户快速理解我们是谁、让产品被搜索与 AI 引擎读懂、让后续运营可以稳定迭代。",
-        proof: ["品牌展示", "产品目录", "认证背书", "询盘路径", "AI/GEO 可发现性", "自动部署"]
+        title: "B 端客户不会只看一个平台店铺就建立信任",
+        claim: "在跨境电商尤其是 B 端业务里，官网承担的是信任验证和客户筛选。客户从社媒、搜索、展会或平台看到我们后，会回到官网确认公司、产品、资质、联系方式和合作路径。",
+        proof: ["公司可信度", "产品目录", "认证背书", "询盘留资", "AI/GEO 可发现性", "销售跟进入口"]
+      },
+      {
+        type: "loop",
+        kicker: "CROSS-BORDER LOOP",
+        title: "完整闭环：前端吸引，中端筛选，后端承接",
+        lanes: [
+          ["前端触达", "社媒内容、短视频、Google 搜索、展会名片、平台曝光，把陌生客户带到可验证入口。"],
+          ["中端官网", "展示品牌、产品、证书和案例；通过访问行为、产品点击、询盘表单和联系方式沉淀意向线索。"],
+          ["后端承接", "阿里国际站、Amazon、TikTok Shop、独立站、邮件和 WhatsApp 跟进，完成报价、样品和复购。"]
+        ],
+        foot: "官网不是替代平台，而是把流量、信任、数据和销售动作连接起来。"
       },
       {
         type: "timeline",
         kicker: "STEP 01",
-        title: "04.28 从零搭建：先把网站骨架立起来",
+        title: "04.28 搭建网站骨架：先有一个可信入口",
         items: [
-          ["目标", "搭建公司对外展示网站"],
+          ["业务目标", "让客户有一个可以反查和确认公司的正式入口"],
           ["首日产出", "整体框架、Logo 设计接入、产品内容初步填充"],
           ["技术栈", "Next.js 16 + React 19 + Tailwind CSS 4 + TypeScript"],
           ["部署", "Vercel 托管，后续接入 GitHub 自动部署"]
@@ -185,21 +246,21 @@
       {
         type: "matrix",
         kicker: "STEP 02",
-        title: "04.30 内容补齐：用真实材料替换占位内容",
-        claim: "网站从“能看”变成“可信”：联系方式、产品图片、产品线和 FDA 文件同步上线。",
+        title: "04.30 补齐真实内容：让客户看到公司、产品和联系方式",
+        claim: "网站从“能看”变成“能判断”：客户能看到真实产品、联系方式、产品线和资质文件，销售也能把官网作为统一对外口径。",
         cards: [
           ["联系方式", "+86-15769111119 / 505899683@qq.com"],
           ["6 个已有产品", "红富士、苹果脆片、小米、锅巴、红枣、杂粮"],
           ["2 条新增产品线", "小米优选礼盒、节日红富士"],
           ["FDA 认证", "/documents/view 安全查看页"],
-          ["Hero 优化", "Logo 放大并移动到主标题旁"],
+          ["询盘基础", "联系方式、产品页、阿里国际站跳转共同承接意向"],
           ["部署规范", "每次修改后 commit + push 触发 Vercel"]
         ]
       },
       {
         type: "process",
         kicker: "STEP 03",
-        title: "05.05 FDA 证书处理：把合规背书变成可展示资产",
+        title: "05.05 证书处理：把合规资质变成信任资产",
         stages: [
           ["OCR 识别", "macOS Vision 框架提取字段"],
           ["敏感遮挡", "Registration Number、DUNS、UFI 等字段值遮挡"],
@@ -211,7 +272,7 @@
       {
         type: "ux",
         kicker: "STEP 04",
-        title: "05.06 UI/UX 升级：让网站更像真实品牌，而不是静态名片",
+        title: "05.06 UI/UX 升级：提升客户停留和浏览效率",
         points: [
           ["黄土高原照片轮播", "BrandStory 组件，3 张照片，4 秒自动切换"],
           ["产品展示自动滚动", "10 个产品卡片，3.5 秒自动滚动"],
@@ -223,64 +284,60 @@
       {
         type: "contact",
         kicker: "STEP 05",
-        title: "05.07 联系链路修正：让询盘能走到正确地方",
-        left: ["阿里国际站", "yanag.en.alibaba.com", "sxynszjs.en.alibaba.com"],
+        title: "05.07 联系链路修正：让询盘能被正确接住",
+        left: ["平台承接", "阿里国际站店铺", "sxynszjs.en.alibaba.com"],
         right: ["双邮箱", "505899683@qq.com", "505899683jjb@gmail.com"],
-        files: ["AlibabaCTA", "Footer", "InquirySection", "Contact Page", "JsonLd"]
+        files: ["AlibabaCTA", "Footer", "InquirySection", "Contact Page", "JsonLd"],
+        links: [
+          ["打开企业官网", "https://yanag.com"],
+          ["阿里国际站", "https://sxynszjs.en.alibaba.com/"]
+        ]
       },
       {
         type: "geo",
         kicker: "STEP 06",
-        title: "05.08 苹果脆片 GEO 优化：让 AI 引擎也能读懂产品",
-        claim: "这一步不是传统 SEO，而是面向 GPT、Gemini、Claude 等 AI 引擎的结构化可发现性改造。",
+        title: "05.08 GEO 优化：让搜索和 AI 引擎读懂产品",
+        claim: "这一步不是传统 SEO，而是把产品事实、FAQ、规格、证书、OEM 流程和案例结构化，让 Google 与 GPT、Gemini、Claude 都能理解并引用。",
         components: ["GeoHero", "AiFAQ", "TechnicalSpecs", "AiKnowledge", "CaseStudy", "CertificationsStrip", "OemWorkflow", "GeoContentLayer"],
         schemas: ["Organization", "WebSite", "Product", "FAQPage", "Breadcrumb"]
       },
       {
         type: "product",
         kicker: "STEP 07",
-        title: "05.12 苹果脆片产品页：用电商逻辑重排图片与视频",
+        title: "05.12 产品页重排：按 B2B 采购逻辑展示产品",
         stats: [["11", "张产品图"], ["1:1", "图库比例"], ["1", "段生产视频"], ["B2B", "展示顺序"]],
         flow: ["主图", "背图", "角度图", "实物打开图", "场景图", "规格图", "详情图", "生产流程"]
       },
       {
-        type: "codex",
-        kicker: "CODEX HANDOFF",
-        title: "05.09 Codex 接手：把网站变成可持续维护的工程流程",
-        bullets: [
-          "克隆并学习 jjb1994Jackl/yanag-website",
-          "确认技术栈：Next.js 16、React 19、Tailwind CSS 4、Framer Motion、lucide-react",
-          "确认线上地址与部署链路：本地修改 → build/lint → commit → push main → Vercel",
-          "建立 Obsidian 中的 Codex 任务记录与每日同步机制",
-          "明确 /Users/jijiabao/codex 为未来 Codex 工作根目录"
-        ]
-      },
-      {
         type: "scorecard",
         kicker: "CURRENT OUTPUT",
-        title: "当前成果：一个能展示、能询盘、能迭代、能被 AI 识别的网站",
+        title: "当前成果：一个能展示、能筛选、能承接、能迭代的网站",
         metrics: [
-          ["15 天", "建设周期"],
-          ["8 条", "产品线"],
-          ["50+ 张", "产品图片"],
-          ["15+ 个", "新增/修改组件"],
-          ["8 个", "GEO 专用组件"],
-          ["5 种", "JSON-LD Schema"],
-          ["2 份", "FDA 证书处理"],
-          ["10+ 次", "GitHub 自动部署"]
+          ["展示", "品牌、产品、产地、资质"],
+          ["筛选", "产品点击、询盘入口、联系方式"],
+          ["承接", "阿里国际站、邮箱、独立站路径"],
+          ["识别", "GEO 内容和 JSON-LD"],
+          ["迭代", "GitHub + Vercel 自动部署"],
+          ["B2B", "采购逻辑和证书背书"],
+          ["C端", "Amazon / TikTok Shop 可延展"],
+          ["数据", "后续接入访客与询盘追踪"]
         ]
       },
       {
         type: "closing",
         kicker: "NEXT CHAPTER",
-        title: "下一步：把官网从展示站升级为外贸增长系统",
+        title: "下一步：把官网升级为外贸增长中台",
         roadmap: [
-          ["内容", "持续补充产品故事、工厂能力、案例与 FAQ"],
-          ["数据", "接入询盘追踪、访问来源、产品热度与转化路径"],
-          ["渠道", "官网、阿里国际站、GEO 内容互相导流"],
-          ["自动化", "形成素材更新、构建验证、部署发布、Obsidian 记录的标准流程"]
+          ["前端", "社媒、短视频、搜索、展会和平台曝光持续导入流量"],
+          ["中端", "官网展示产品和资质，沉淀访客数据、询盘表单和联系方式"],
+          ["后端", "阿里国际站、Amazon、TikTok Shop、独立站与销售团队共同承接"],
+          ["数据", "接入访问来源、产品热度、询盘转化和客户回访记录"]
         ],
-        close: "YANAG.com 是第一块地基；真正的价值，是它已经可以被持续耕耘。"
+        close: "YANAG.com 是闭环里的中枢：前端负责吸引，中端负责筛选，后端负责成交。",
+        links: [
+          ["访问 YANAG.com", "https://yanag.com"],
+          ["查看产品页", "https://yanag.com/products/apple-crisps"]
+        ]
       }
     ];
 
@@ -308,6 +365,19 @@
       const canvas = document.createElement("canvas");
       canvas.setAttribute("aria-label", slide.title);
       section.appendChild(canvas);
+      if (slide.links) {
+        const links = document.createElement("div");
+        links.className = "link-strip";
+        slide.links.forEach(([label, href]) => {
+          const anchor = document.createElement("a");
+          anchor.href = href;
+          anchor.target = "_blank";
+          anchor.rel = "noreferrer";
+          anchor.textContent = `${label} →`;
+          links.appendChild(anchor);
+        });
+        section.appendChild(links);
+      }
       main.appendChild(section);
       canvases.push(canvas);
 
@@ -456,6 +526,42 @@
         ctx.font = font(w < 760 ? 15 : 18, 700);
         ctx.fillText(item, x + 78, y + 39);
       });
+    }
+
+    function drawLoop(ctx, w, h, slide, index) {
+      const m = frame(ctx, w, h, slide, index);
+      const titleH = drawTitle(ctx, slide, m, m + 102, Math.min(980, w - m * 2), w < 760 ? 31 : 47);
+      const startY = m + 150 + titleH;
+      const gap = 20;
+      const cols = w < 860 ? 1 : 3;
+      const cardW = (w - m * 2 - gap * (cols - 1)) / cols;
+      const cardH = w < 860 ? 132 : 230;
+      slide.lanes.forEach((lane, i) => {
+        const x = m + (i % cols) * (cardW + gap);
+        const y = startY + Math.floor(i / cols) * (cardH + 22);
+        roundRect(ctx, x, y, cardW, cardH, 8, "rgba(248,240,220,0.075)", "rgba(248,240,220,0.16)");
+        ctx.fillStyle = i === 1 ? palette.gold : palette.green;
+        ctx.font = font(w < 760 ? 15 : 17, 900);
+        ctx.fillText("0" + (i + 1), x + 22, y + 34);
+        ctx.fillStyle = palette.ink;
+        ctx.font = font(w < 760 ? 20 : 26, 850);
+        ctx.fillText(lane[0], x + 22, y + 74);
+        wrapText(ctx, lane[1], x + 22, y + 112, cardW - 44, w < 760 ? 14 : 18, palette.muted, 520, 1.42);
+        if (i < slide.lanes.length - 1 && cols === 3) {
+          ctx.strokeStyle = "rgba(233,196,106,0.56)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(x + cardW + 4, y + cardH / 2);
+          ctx.lineTo(x + cardW + gap - 4, y + cardH / 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(x + cardW + gap - 16, y + cardH / 2 - 6);
+          ctx.lineTo(x + cardW + gap - 4, y + cardH / 2);
+          ctx.lineTo(x + cardW + gap - 16, y + cardH / 2 + 6);
+          ctx.stroke();
+        }
+      });
+      wrapText(ctx, slide.foot, m, h - m - 88, Math.min(980, w - m * 2), w < 760 ? 19 : 28, palette.gold, 800, 1.28);
     }
 
     function drawTimeline(ctx, w, h, slide, index) {
@@ -690,6 +796,7 @@
       ctx.textBaseline = "alphabetic";
       if (slide.type === "cover") drawCover(ctx, w, h, slide, index);
       if (slide.type === "thesis") drawThesis(ctx, w, h, slide, index);
+      if (slide.type === "loop") drawLoop(ctx, w, h, slide, index);
       if (slide.type === "timeline") drawTimeline(ctx, w, h, slide, index);
       if (slide.type === "matrix") drawMatrix(ctx, w, h, slide, index);
       if (slide.type === "process") drawProcess(ctx, w, h, slide, index);
