@@ -297,7 +297,13 @@
         type: "geo",
         kicker: "STEP 06",
         title: "05.08 GEO 优化：让搜索和 AI 引擎读懂产品",
-        claim: "这一步不是传统 SEO，而是把产品事实、FAQ、规格、证书、OEM 流程和案例结构化，让 Google 与 GPT、Gemini、Claude 都能理解并引用。",
+        fullName: "GEO = Generative Engine Optimization，生成式引擎优化",
+        claim: "它不是传统 SEO 的简单改名，而是面向 GPT、Gemini、Claude 等生成式 AI 的内容结构化工程，让 AI 能准确理解公司、产品、资质、场景和采购路径。",
+        problems: [
+          ["解决“看不懂”", "把产品事实、规格、FAQ、证书和 OEM 流程写成机器可解析的结构。"],
+          ["解决“不敢引用”", "用 Schema、案例和资质背书降低 AI 与搜索引擎的理解成本。"],
+          ["解决“找不到入口”", "把产品页、询盘路径和公司身份关联起来，让潜在客户能继续行动。"]
+        ],
         components: ["GeoHero", "AiFAQ", "TechnicalSpecs", "AiKnowledge", "CaseStudy", "CertificationsStrip", "OemWorkflow", "GeoContentLayer"],
         schemas: ["Organization", "WebSite", "Product", "FAQPage", "Breadcrumb"]
       },
@@ -685,9 +691,29 @@
 
     function drawGeo(ctx, w, h, slide, index) {
       const m = frame(ctx, w, h, slide, index);
-      const titleH = drawTitle(ctx, slide, m, m + 106, Math.min(1050, w - m * 2), w < 760 ? 31 : 47);
-      wrapText(ctx, slide.claim, m, m + 130 + titleH, Math.min(910, w - m * 2), w < 760 ? 16 : 21, palette.muted, 500, 1.42);
-      const y = h * 0.48;
+      const titleH = drawTitle(ctx, slide, m, m + 96, Math.min(1050, w - m * 2), w < 760 ? 30 : 45);
+      const fullY = m + 122 + titleH;
+      ctx.fillStyle = palette.gold;
+      ctx.font = font(w < 760 ? 16 : 22, 850);
+      wrapText(ctx, slide.fullName, m, fullY, Math.min(980, w - m * 2), w < 760 ? 16 : 22, palette.gold, 850, 1.28);
+      wrapText(ctx, slide.claim, m, fullY + (w < 760 ? 34 : 44), Math.min(980, w - m * 2), w < 760 ? 15 : 19, palette.muted, 500, 1.4);
+
+      const problemY = h * 0.42;
+      const problemGap = 16;
+      const problemCols = w < 860 ? 1 : 3;
+      const problemW = (w - m * 2 - problemGap * (problemCols - 1)) / problemCols;
+      const problemH = w < 760 ? 100 : 126;
+      slide.problems.forEach((item, i) => {
+        const x = m + (i % problemCols) * (problemW + problemGap);
+        const y = problemY + Math.floor(i / problemCols) * (problemH + 14);
+        roundRect(ctx, x, y, problemW, problemH, 8, "rgba(248,240,220,0.075)", "rgba(248,240,220,0.14)");
+        ctx.fillStyle = i % 2 ? palette.green : palette.gold;
+        ctx.font = font(w < 760 ? 15 : 18, 850);
+        ctx.fillText(item[0], x + 18, y + 34);
+        wrapText(ctx, item[1], x + 18, y + 64, problemW - 36, w < 760 ? 12 : 15, palette.muted, 520, 1.32);
+      });
+
+      const y = h * 0.66;
       ctx.fillStyle = palette.gold;
       ctx.font = font(17, 800);
       ctx.fillText("8 个 GEO 组件", m, y);
@@ -699,7 +725,7 @@
         const row = Math.floor(i / 4);
         x += pill(ctx, c, x, y + 34 + row * 54, { fill: "rgba(248,240,220,0.08)", stroke: "rgba(248,240,220,0.13)", color: palette.ink, size: 14 }) + 10;
       });
-      const sy = y + 184;
+      const sy = y + 138;
       ctx.fillStyle = palette.green;
       ctx.font = font(17, 800);
       ctx.fillText("5 种 JSON-LD Schema", m, sy);
