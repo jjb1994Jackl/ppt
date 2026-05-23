@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 在跨境电商中的具体应用</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07120f;
+      --ink: #fff8e8;
+      --muted: rgba(255, 248, 232, 0.66);
+      --gold: #f2c86b;
+      --green: #7fd59a;
+      --coral: #ff9770;
+      --line: rgba(255, 248, 232, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(110deg, rgba(4, 14, 12, 0.92), rgba(7, 18, 15, 0.74)),
+        url("./assets/ai-commerce-bg.png") center / cover fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(127, 213, 154, 0.2), transparent 28%),
+        radial-gradient(circle at 84% 72%, rgba(242, 200, 107, 0.18), transparent 30%),
+        linear-gradient(180deg, rgba(3, 12, 10, 0.38), rgba(3, 12, 10, 0.72));
+      pointer-events: none;
+    }
+
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 248, 232, 0.12);
+    }
+
+    .progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--gold), var(--coral));
+      transition: width 160ms ease;
+    }
+
+    .rail {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      z-index: 45;
+      display: grid;
+      gap: 10px;
+      transform: translateY(-50%);
+    }
+
+    .rail button {
+      width: 10px;
+      height: 10px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 248, 232, 0.32);
+      cursor: pointer;
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .rail button[aria-current="true"] {
+      transform: scale(1.75);
+      background: var(--gold);
+    }
+
+    .hint {
+      position: fixed;
+      left: 28px;
+      bottom: 20px;
+      z-index: 45;
+      color: rgba(255, 248, 232, 0.55);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .slide {
+      position: relative;
+      height: 100vh;
+      min-height: 100vh;
+      width: 100vw;
+      display: grid;
+      place-items: center;
+      padding: 34px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, rgba(255, 248, 232, 0.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 248, 232, 0.026) 1px, transparent 1px);
+      background-size: 92px 92px;
+      mask-image: radial-gradient(circle at center, black 0%, black 58%, transparent 82%);
+      pointer-events: none;
+    }
+
+    canvas {
+      width: min(1180px, calc(100vw - 70px));
+      aspect-ratio: 16 / 9;
+      max-height: calc(100vh - 86px);
+      border: 1px solid rgba(255, 248, 232, 0.16);
+      background: rgba(3, 12, 10, 0.46);
+      box-shadow: 0 28px 100px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(8px);
+    }
+
+    @media (max-width: 760px) {
+      .slide {
+        padding: 18px;
+      }
+
+      .slide::before,
+      .rail {
+        display: none;
+      }
+
+      canvas {
+        width: calc(100vw - 28px);
+        max-height: calc(100vh - 58px);
+      }
+
+      .hint {
+        left: 16px;
+        bottom: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+  <nav class="rail" id="rail" aria-label="幻灯片导航"></nav>
+  <div class="hint">Scroll / Arrow keys</div>
+  <main id="deck"></main>
+
+  <script>
+    const slides = [
+      {
+        kicker: "AI × CROSS-BORDER E-COMMERCE",
+        title: "AI 在跨境电商中的具体应用",
+        subtitle: "从选品、调研、官网、内容、询盘到复盘，把经验变成一套可复制的增长流程。",
+        tags: ["选品调研", "GEO 官网", "内容转化", "客户开发", "数据复盘"],
+        mode: "cover"
+      },
+      {
+        kicker: "WHY NOW",
+        title: "跨境团队真正缺的不是工具，而是稳定判断",
+        subtitle: "AI 的价值不是替代人拍脑袋，而是把公开信息、客户反馈和内部能力放到同一张工作台上。",
+        cards: [
+          ["信息太散", "Amazon、TikTok、Alibaba、Google、官网和评论各讲各的，很难快速拼成完整判断。"],
+          ["结论太虚", "热度、销量、GMV、趋势常常没有证据边界，汇报时容易把估算说成事实。"],
+          ["执行断层", "调研报告写完后，详情页、视频脚本、询盘话术和官网内容没有接上。"]
+        ],
+        mode: "threeCards"
+      },
+      {
+        kicker: "APPLICATION MAP",
+        title: "一条跨境链路，AI 可以落在 6 个关键节点",
+        subtitle: "先核验证据，再判断机会，最后把洞察转成能执行、能跟进、能复盘的业务资产。",
+        flow: [
+          ["01", "选品发现", "平台热度、趋势词、竞品结构"],
+          ["02", "市场判断", "国家、渠道、价格带、合规风险"],
+          ["03", "产品匹配", "包装、认证、MOQ、交期、毛利"],
+          ["04", "官网/GEO", "让搜索和 AI 引擎读懂产品"],
+          ["05", "内容转化", "详情页、短视频、达人 Brief"],
+          ["06", "询盘复盘", "客户问题、样品反馈、下一轮优化"]
+        ],
+        mode: "flow"
+      },
+      {
+        kicker: "USE CASE 01",
+        title: "选品与竞品调研：让每个结论都带来源",
+        subtitle: "把原来的三大 Skill 合并成一个标准动作：抓公开数据、标证据等级、判断能不能进入。",
+        cards: [
+          ["抓什么", "竞品链接、价格带、评论痛点、内容素材、供应商候选、平台规则和搜索趋势。"],
+          ["怎么判断", "区分 observed、official、inferred、estimated、unverified，避免把不可核验信息写成事实。"],
+          ["产出什么", "市场机会等级、进入路径、B端样品验证问题、C端内容测试计划和老板汇报大纲。"]
+        ],
+        mode: "threeCards"
+      },
+      {
+        kicker: "USE CASE 02",
+        title: "官网与 GEO：让客户和 AI 都能看懂我们",
+        subtitle: "YANAG 网站的经验可以复用：官网不是摆设，而是跨境获客闭环里的信任中枢。",
+        split: [
+          ["客户看什么", ["公司是否真实", "产品是否清楚", "资质是否可信", "联系方式是否顺畅"]],
+          ["AI 读什么", ["产品结构化信息", "FAQ 与技术规格", "证书和案例", "JSON-LD / GEO 内容层"]]
+        ],
+        close: "社媒和平台负责曝光，官网负责验证信任，询盘和店铺负责承接成交。",
+        mode: "split"
+      },
+      {
+        kicker: "USE CASE 03",
+        title: "内容与客户开发：把调研结果变成动作",
+        subtitle: "AI 最适合做“从洞察到素材”的中间层，但素材必须回到产品事实和真实评论。",
+        cards: [
+          ["平台内容", "Amazon 五点、Alibaba 详情页、TikTok 短视频脚本、达人 Brief、广告角度。"],
+          ["客户沟通", "询盘回复、样品跟进、报价问题、WhatsApp 开场白、邮件开发信。"],
+          ["产品优化", "包装、口味、规格、标签、主图、详情页顺序和常见异议处理。"]
+        ],
+        mode: "threeCards"
+      },
+      {
+        kicker: "OPERATING RHYTHM",
+        title: "建议团队这样用：三天形成判断，一周进入验证",
+        subtitle: "让 AI 成为跨部门的统一工作流，而不是某个人临时问答的工具。",
+        timeline: [
+          ["Day 1", "证据盘点", "抓平台、评论、竞品、供应商和搜索资料，生成可信度日志。"],
+          ["Day 2", "机会判断", "评估目标市场、渠道打法、合规标签、交付模型和我方匹配度。"],
+          ["Day 3", "素材生成", "输出官网内容、详情页、短视频脚本、询盘话术和老板汇报。"],
+          ["Week 1", "验证复盘", "B端发样品和询盘，C端做内容小测，用反馈修正产品和话术。"]
+        ],
+        mode: "timeline"
+      },
+      {
+        kicker: "TAKEAWAY",
+        title: "AI 在跨境电商里的核心价值：把经验变成系统",
+        subtitle: "它不只是提高写文案速度，而是让团队更快回答三个问题：能不能做、凭什么做、怎么做。",
+        tags: ["更快发现机会", "更清楚识别风险", "更稳定输出内容", "更容易沉淀资产"],
+        close: "下一步：把每个新品都跑一遍同样的 AI 工作流，形成可复盘的产品知识库。",
+        mode: "closing"
+      }
+    ];
+
+    const colors = {
+      ink: "#fff8e8",
+      muted: "rgba(255, 248, 232, 0.7)",
+      faint: "rgba(255, 248, 232, 0.13)",
+      panel: "rgba(5, 22, 17, 0.64)",
+      gold: "#f2c86b",
+      green: "#7fd59a",
+      coral: "#ff9770",
+      dark: "#07120f"
+    };
+
+    const deck = document.getElementById("deck");
+    const rail = document.getElementById("rail");
+    const progressBar = document.getElementById("progressBar");
+    const canvases = [];
+
+    slides.forEach((slide, index) => {
+      const section = document.createElement("section");
+      section.className = "slide";
+      section.id = `slide-${index + 1}`;
+
+      const canvas = document.createElement("canvas");
+      canvas.setAttribute("aria-label", `${index + 1}. ${slide.title}`);
+      section.appendChild(canvas);
+      deck.appendChild(section);
+      canvases.push(canvas);
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.setAttribute("aria-label", `跳转到第 ${index + 1} 页`);
+      button.addEventListener("click", () => show(index));
+      rail.appendChild(button);
+    });
+
+    function setupCanvas(canvas) {
+      const ratio = window.devicePixelRatio || 1;
+      const width = 1180;
+      const height = 664;
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return { ctx, w: width, h: height };
+    }
+
+    function font(size, weight = 700) {
+      return `${weight} ${size}px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif`;
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      const radius = Math.min(r, w / 2, h / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.arcTo(x + w, y, x + w, y + h, radius);
+      ctx.arcTo(x + w, y + h, x, y + h, radius);
+      ctx.arcTo(x, y + h, x, y, radius);
+      ctx.arcTo(x, y, x + w, y, radius);
+      ctx.closePath();
+    }
+
+    function fillRoundRect(ctx, x, y, w, h, r, fill, stroke = null) {
+      roundRect(ctx, x, y, w, h, r);
+      ctx.fillStyle = fill;
+      ctx.fill();
+      if (stroke) {
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    function wrapLines(ctx, text, maxWidth) {
+      const chars = text.match(/[A-Za-z0-9/._-]+|[\u4e00-\u9fff]|[^\s]/g) || [];
+      const lines = [];
+      let line = "";
+      chars.forEach((char) => {
+        const next = line + char;
+        if (ctx.measureText(next).width > maxWidth && line) {
+          lines.push(line);
+          line = char.trimStart();
+        } else {
+          line = next;
+        }
+      });
+      if (line) lines.push(line);
+      return lines.reduce((result, current) => {
+        const punctuationOnly = /^[，。；：、！？）】》]+$/.test(current);
+        if (punctuationOnly && result.length) {
+          result[result.length - 1] += current;
+        } else {
+          result.push(current);
+        }
+        return result;
+      }, []);
+    }
+
+    function drawWrapped(ctx, text, x, y, maxWidth, lineHeight, color = colors.muted) {
+      ctx.fillStyle = color;
+      wrapLines(ctx, text, maxWidth).forEach((line, index) => {
+        ctx.fillText(line, x, y + index * lineHeight);
+      });
+      return y + wrapLines(ctx, text, maxWidth).length * lineHeight;
+    }
+
+    function drawBackground(ctx, w, h, index) {
+      const gradient = ctx.createLinearGradient(0, 0, w, h);
+      gradient.addColorStop(0, "rgba(3, 12, 10, 0.82)");
+      gradient.addColorStop(0.54, "rgba(8, 28, 22, 0.7)");
+      gradient.addColorStop(1, "rgba(3, 12, 10, 0.88)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.globalAlpha = 0.2;
+      ctx.strokeStyle = colors.faint;
+      for (let x = 0; x < w; x += 74) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x + h * 0.22, h);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+
+      const glow = ctx.createRadialGradient(w * 0.82, h * 0.22, 0, w * 0.82, h * 0.22, w * 0.42);
+      glow.addColorStop(0, index % 2 === 0 ? "rgba(242, 200, 107, 0.24)" : "rgba(127, 213, 154, 0.2)");
+      glow.addColorStop(1, "rgba(242, 200, 107, 0)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.strokeStyle = "rgba(255, 248, 232, 0.16)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(18, 18, w - 36, h - 36);
+    }
+
+    function drawHeader(ctx, slide, index, w) {
+      ctx.font = font(12, 850);
+      ctx.fillStyle = colors.gold;
+      ctx.letterSpacing = "1px";
+      fillRoundRect(ctx, 58, 52, Math.min(330, ctx.measureText(slide.kicker).width + 32), 34, 17, "rgba(242, 200, 107, 0.12)", "rgba(242, 200, 107, 0.36)");
+      ctx.fillText(slide.kicker, 74, 74);
+      ctx.letterSpacing = "0px";
+
+      ctx.fillStyle = "rgba(255, 248, 232, 0.46)";
+      ctx.font = font(14, 800);
+      ctx.textAlign = "right";
+      ctx.fillText(`${String(index + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`, w - 58, 74);
+      ctx.textAlign = "left";
+    }
+
+    function drawTitleBlock(ctx, slide, x, y, maxWidth, titleSize = 54) {
+      ctx.font = font(titleSize, 920);
+      ctx.fillStyle = colors.ink;
+      const titleLines = wrapLines(ctx, slide.title, maxWidth);
+      titleLines.forEach((line, index) => ctx.fillText(line, x, y + index * (titleSize * 1.13)));
+
+      ctx.font = font(22, 560);
+      const subtitleY = y + titleLines.length * titleSize * 1.13 + 22;
+      return drawWrapped(ctx, slide.subtitle, x, subtitleY, maxWidth * 0.9, 34, colors.muted);
+    }
+
+    function drawTags(ctx, tags, x, y, maxWidth) {
+      ctx.font = font(14, 820);
+      let cursorX = x;
+      let cursorY = y;
+      tags.forEach((tag, index) => {
+        const width = ctx.measureText(tag).width + 30;
+        if (cursorX + width > x + maxWidth) {
+          cursorX = x;
+          cursorY += 48;
+        }
+        const accent = [colors.green, colors.gold, colors.coral][index % 3];
+        fillRoundRect(ctx, cursorX, cursorY, width, 34, 17, "rgba(255, 248, 232, 0.08)", `rgba(255, 248, 232, 0.18)`);
+        ctx.fillStyle = accent;
+        ctx.beginPath();
+        ctx.arc(cursorX + 17, cursorY + 17, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = colors.ink;
+        ctx.fillText(tag, cursorX + 28, cursorY + 22);
+        cursorX += width + 12;
+      });
+    }
+
+    function drawCard(ctx, x, y, w, h, title, body, accent) {
+      fillRoundRect(ctx, x, y, w, h, 8, colors.panel, "rgba(255, 248, 232, 0.16)");
+      ctx.fillStyle = accent;
+      ctx.fillRect(x, y, 4, h);
+      ctx.font = font(23, 880);
+      ctx.fillStyle = colors.ink;
+      ctx.fillText(title, x + 24, y + 42);
+      ctx.font = font(17, 540);
+      drawWrapped(ctx, body, x + 24, y + 78, w - 48, 26, colors.muted);
+    }
+
+    function drawThreeCards(ctx, slide, w, h) {
+      const bottom = drawTitleBlock(ctx, slide, 58, 125, w * 0.76, 43);
+      const gap = 18;
+      const cardW = (w - 116 - gap * 2) / 3;
+      const cardH = h - bottom - 92;
+      slide.cards.forEach(([title, body], index) => {
+        drawCard(ctx, 58 + index * (cardW + gap), bottom + 34, cardW, Math.max(166, cardH), title, body, [colors.green, colors.gold, colors.coral][index]);
+      });
+    }
+
+    function drawFlow(ctx, slide, w, h) {
+      drawTitleBlock(ctx, slide, 58, 125, w * 0.78, 42);
+      const startY = h * 0.46;
+      const cardW = (w - 116 - 30) / 3;
+      const cardH = 112;
+      slide.flow.forEach(([num, title, body], index) => {
+        const col = index % 3;
+        const row = Math.floor(index / 3);
+        const x = 58 + col * (cardW + 15);
+        const y = startY + row * 142;
+        drawCard(ctx, x, y, cardW, cardH, `${num} ${title}`, body, [colors.green, colors.gold, colors.coral][index % 3]);
+        if (index < slide.flow.length - 1 && col < 2) {
+          ctx.strokeStyle = "rgba(242, 200, 107, 0.38)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(x + cardW + 4, y + cardH / 2);
+          ctx.lineTo(x + cardW + 14, y + cardH / 2);
+          ctx.stroke();
+        }
+      });
+    }
+
+    function drawSplit(ctx, slide, w, h) {
+      const bottom = drawTitleBlock(ctx, slide, 58, 125, w * 0.74, 42);
+      const paneW = (w - 138) / 2;
+      slide.split.forEach(([label, items], index) => {
+        const x = 58 + index * (paneW + 22);
+        const y = bottom + 30;
+        fillRoundRect(ctx, x, y, paneW, 230, 8, colors.panel, "rgba(255, 248, 232, 0.16)");
+        ctx.font = font(28, 900);
+        ctx.fillStyle = index === 0 ? colors.gold : colors.green;
+        ctx.fillText(label, x + 28, y + 48);
+        ctx.font = font(20, 650);
+        ctx.fillStyle = colors.ink;
+        items.forEach((item, itemIndex) => {
+          const itemY = y + 92 + itemIndex * 34;
+          ctx.fillStyle = index === 0 ? colors.gold : colors.green;
+          ctx.beginPath();
+          ctx.arc(x + 32, itemY - 6, 4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = colors.ink;
+          ctx.fillText(item, x + 48, itemY);
+        });
+      });
+      ctx.font = font(22, 700);
+      fillRoundRect(ctx, 58, h - 100, w - 116, 48, 8, "rgba(242, 200, 107, 0.1)", "rgba(242, 200, 107, 0.28)");
+      ctx.fillStyle = colors.gold;
+      ctx.fillText(slide.close, 82, h - 69);
+    }
+
+    function drawTimeline(ctx, slide, w, h) {
+      drawTitleBlock(ctx, slide, 58, 125, w * 0.78, 42);
+      const x = 96;
+      const y = h * 0.48;
+      const stepW = (w - 192) / slide.timeline.length;
+      ctx.strokeStyle = "rgba(255, 248, 232, 0.2)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x, y + 30);
+      ctx.lineTo(w - 96, y + 30);
+      ctx.stroke();
+
+      slide.timeline.forEach(([time, title, body], index) => {
+        const cx = x + index * stepW + stepW / 2;
+        ctx.fillStyle = [colors.green, colors.gold, colors.coral, colors.green][index];
+        ctx.beginPath();
+        ctx.arc(cx, y + 30, 13, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = font(18, 900);
+        ctx.textAlign = "center";
+        ctx.fillStyle = colors.gold;
+        ctx.fillText(time, cx, y + 78);
+        ctx.font = font(23, 900);
+        ctx.fillStyle = colors.ink;
+        ctx.fillText(title, cx, y + 114);
+        ctx.font = font(16, 540);
+        ctx.textAlign = "left";
+        drawWrapped(ctx, body, cx - stepW * 0.38, y + 148, stepW * 0.76, 25, colors.muted);
+        ctx.textAlign = "left";
+      });
+    }
+
+    function drawCover(ctx, slide, w, h) {
+      const y = h * 0.25;
+      drawTitleBlock(ctx, slide, 58, y, w * 0.72, 62);
+      drawTags(ctx, slide.tags, 58, h * 0.7, w * 0.8);
+      fillRoundRect(ctx, w - 285, h - 112, 210, 54, 8, "rgba(127, 213, 154, 0.12)", "rgba(127, 213, 154, 0.3)");
+      ctx.font = font(15, 850);
+      ctx.fillStyle = colors.green;
+      ctx.fillText("HTML CANVAS DECK", w - 260, h - 78);
+    }
+
+    function drawClosing(ctx, slide, w, h) {
+      const bottom = drawTitleBlock(ctx, slide, 58, 138, w * 0.78, 50);
+      drawTags(ctx, slide.tags, 58, bottom + 36, w * 0.82);
+      fillRoundRect(ctx, 58, h - 138, w - 116, 64, 8, "rgba(242, 200, 107, 0.1)", "rgba(242, 200, 107, 0.3)");
+      ctx.font = font(22, 820);
+      ctx.fillStyle = colors.gold;
+      ctx.fillText(slide.close, 88, h - 97);
+    }
+
+    function renderSlide(canvas, slide, index) {
+      const { ctx, w, h } = setupCanvas(canvas);
+      drawBackground(ctx, w, h, index);
+      drawHeader(ctx, slide, index, w);
+
+      if (slide.mode === "cover") drawCover(ctx, slide, w, h);
+      if (slide.mode === "threeCards") drawThreeCards(ctx, slide, w, h);
+      if (slide.mode === "flow") drawFlow(ctx, slide, w, h);
+      if (slide.mode === "split") drawSplit(ctx, slide, w, h);
+      if (slide.mode === "timeline") drawTimeline(ctx, slide, w, h);
+      if (slide.mode === "closing") drawClosing(ctx, slide, w, h);
+    }
+
+    function renderAll() {
+      canvases.forEach((canvas, index) => renderSlide(canvas, slides[index], index));
+    }
+
+    const sections = Array.from(document.querySelectorAll(".slide"));
+    const buttons = Array.from(rail.querySelectorAll("button"));
+    let currentIndex = 0;
+    let lastWheelAt = 0;
+
+    function show(index) {
+      currentIndex = Math.max(0, Math.min(sections.length - 1, index));
+      window.scrollTo({ top: sections[currentIndex].offsetTop, behavior: index === 0 ? "instant" : "smooth" });
+      updateProgress();
+    }
+
+    function updateProgress() {
+      buttons.forEach((button, buttonIndex) => button.setAttribute("aria-current", buttonIndex === currentIndex ? "true" : "false"));
+      progressBar.style.width = `${((currentIndex + 1) / sections.length) * 100}%`;
+    }
+
+    function go(delta) {
+      show(currentIndex + delta);
+    }
+
+    window.addEventListener("resize", () => {
+      renderAll();
+      updateProgress();
+    });
+    window.addEventListener("wheel", (event) => {
+      const now = Date.now();
+      if (Math.abs(event.deltaY) < 18 || now - lastWheelAt < 520) return;
+      lastWheelAt = now;
+      go(event.deltaY > 0 ? 1 : -1);
+    }, { passive: true });
+    window.addEventListener("keydown", (event) => {
+      if (["ArrowDown", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        go(1);
+      }
+      if (["ArrowUp", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        go(-1);
+      }
+      if (event.key === "Home") {
+        event.preventDefault();
+        sections[0].scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      if (event.key === "End") {
+        event.preventDefault();
+        sections[sections.length - 1].scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+
+    renderAll();
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+    show(0);
+  </script>
+</body>
+</html>
